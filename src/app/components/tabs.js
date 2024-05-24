@@ -8,6 +8,7 @@ import {
   } from "@material-tailwind/react";
 import { UnitForm } from "./unit";
 import { BulkForm } from "./bulk";
+import { JsonForm } from "./json";
    
   export function InputTabs() {
     const data = [
@@ -20,6 +21,11 @@ import { BulkForm } from "./bulk";
         label: "Bulk Prediction",
         value: "bulk",
         desc: <BulkForm/>,
+      },
+      {
+        label: "Bulk Prediction(JSON)",
+        value: "bulk-json",
+        desc: <JsonForm/>,
       },
  
     ];

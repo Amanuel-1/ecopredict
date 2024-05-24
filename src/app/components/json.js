@@ -10,51 +10,17 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 
-export function BulkForm() {
-  const [inputs, setInputs] = useState([]);
+export function JsonForm() {
+  const [inputs, setInputs] = useState('');
 
   const [outputs, setOutputs] = useState([0.0]);
   const [error, setError] = useState(false);
 
-  const transformInput = () => {
-    try {
-      //transforms inputs into an array of numbers
-      const rows = inputs.split("\n");
 
-      let data = [];
-      setError(false);
-
-      rows.forEach((row) => {
-        const [timeonApp, timeonWebsite, lengthofMembership] = row
-          .split(",")
-          .map((el) => {
-            el = el.trim();
-            if (el!="") {
-              if (isNaN(el)) {
-                setError(true);
-                throw new Error("Invalid input. Please enter a valid number.");
-              }
-              return parseFloat(el);
-            }
-          });
-        const unitData = {
-          "Time on App": timeonApp,
-          "Time on Website": timeonWebsite,
-          "Length of Membership": lengthofMembership,
-        };
-
-        data.push(unitData);
-      });
-
-      return data;
-      setError(false);
-    } catch (error) {
-      setError(true);
-    }
-  };
+  
 
   const handleSubmit = async () => {
-    let data = transformInput(inputs);
+    let data = JSON.parse(inputs);
     if (data) {
       console.log("data", data);
       const response = await fetch(
@@ -88,19 +54,34 @@ export function BulkForm() {
           <div className="mb-1 flex flex-col gap-6">
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Time Spent using the Ecomerce App
-            </Typography>
+            </Typography> 
             <Textarea
               type="number"
               size="lg"
               rows={10}
+              
+              placeholder={`
+              [
+                {
+                    "Time on App": 1.23,
+                    "Time on Website": 23.45,
+                    "Length of Membership": 3.67
+                },
+                {
+                    "Time on App": 0.98,
+                    "Time on Website": 15.67,
+                    "Length of Membership": 2.54
+                },
+               
+               
+            ]`}
               value={inputs}
-              placeholder={`'Time on App','Time on Website','Length of Membership' \n.\n.\n.
-                              `}  
               onChange={(e) => setInputs(e.target.value)}
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
               labelProps={{
-                className: "before:content-none after:content-none",
+                className: "before:content-none after:content-none ",
               }}
+              
             />
           </div>
 
@@ -119,7 +100,7 @@ export function BulkForm() {
               <thead>
                 <tr>
                   <th className="px-4 py-2">Input Number</th>
-                  <th className="px-4 py-2">Expected Expenditure(/yr)</th>
+                  <th className="px-4 py-2">Expected Expenditure</th>
                 </tr>
               </thead>
               <tbody>
